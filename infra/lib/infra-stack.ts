@@ -32,12 +32,27 @@ export class IoTStreamLakeIngestStack extends Stack {
         bufferingInterval: Duration.seconds(60),
         bufferingSize:     Size.mebibytes(1),
         compression:       firehose.Compression.GZIP,
+        dataOutputPrefix: '!{timestamp:yyyy-MM-dd}/',
+        errorOutputPrefix: 'errors/!{firehose:error-output-type}/!{timestamp:yyyy-MM-dd}/',
       }),
     });
 
     const iotToFirehoseRole = new iam.Role(this, 'IotToFirehoseRole', {
       assumedBy: new iam.ServicePrincipal('iot.amazonaws.com'), 
     });
+
+    // Logging Perms, in case
+    iotToFirehoseRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'logs:CreateLogGroup',
+          'logs:CreateLogStream',
+          'logs:PutLogEvents',
+        ],
+        resources: ['*'],          // mod l8r
+      }),
+    );
 
     // grant that badge permission to write into the stream (accepts role/user)
     stream.grantPutRecords(iotToFirehoseRole);
@@ -47,7 +62,7 @@ export class IoTStreamLakeIngestStack extends Stack {
       sql: iot.IotSql.fromStringAsVer20160323("SELECT * FROM 'test/telemetry/#'"),
       actions: [
         new iotActions.FirehosePutRecordAction(stream, {
-          batchMode: true,
+          batchMode: false, // True causes issues with firehose sending to S3 (?)
           //role:       stream.grantPrincipal as iam.IRole,
           role: iotToFirehoseRole, // giving IoT its own role since IoT can't get firehose's perms (above role failed)
         }),

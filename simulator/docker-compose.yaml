@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  mqtt-simulator:
+    build: .
+    environment:
+      - MQTT_BROKER=host.docker.internal
+      - MQTT_TOPIC=sensors/telemetry
+      #### AWS IoT Core 
+
+      # - MQTT_BROKER=a1b2c3d4e5-ats.iot.us-east-1.amazonaws.com
+      # - MQTT_TOPIC=sensors/telemetry
+      # DEVICE_ID can be added or left out to let the script generate a random one (refer to publisher.py)
+    
+    # Ignore this if not using Docker Swarm
+    deploy: 
+      mode: replicated
+      replicas: 10   # 🔁 bump to more depending on how much your machine can handle, or using Fargate
