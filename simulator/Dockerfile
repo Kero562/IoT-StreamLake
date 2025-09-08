@@ -7,4 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 COPY publisher.py .
 
-CMD ["python", "publisher.py"]
+#-u for <4KiB messages, immediate flush
+CMD ["python", "-u", "publisher.py"]

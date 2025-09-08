@@ -3,3 +3,8 @@ node_modules/
 cdk.out/
 __pycache__/
 
+# Keys, certs, perms etc
+simulator/certs/**
+*.pem
+*.crt
+*.key

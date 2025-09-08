@@ -13,6 +13,8 @@ import * as fhDest     from '@aws-cdk/aws-kinesisfirehose-destinations-alpha';
 import * as iot        from '@aws-cdk/aws-iot-alpha';
 import * as iotActions from '@aws-cdk/aws-iot-actions-alpha';
 import * as iam         from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 
 export class IoTStreamLakeIngestStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -29,8 +31,8 @@ export class IoTStreamLakeIngestStack extends Stack {
     // Firehose delivery stream → S3
     const stream = new firehose.DeliveryStream(this, 'TelemetryStream', {
       destination: new fhDest.S3Bucket(rawBucket, {
-        bufferingInterval: Duration.seconds(60),
-        bufferingSize:     Size.mebibytes(1),
+        bufferingInterval: Duration.seconds(300),
+        bufferingSize:     Size.mebibytes(64),
         compression:       firehose.Compression.GZIP,
         dataOutputPrefix: '!{timestamp:yyyy-MM-dd}/',
         errorOutputPrefix: 'errors/!{firehose:error-output-type}/!{timestamp:yyyy-MM-dd}/',
@@ -59,7 +61,7 @@ export class IoTStreamLakeIngestStack extends Stack {
 
     // IoT Core rule that forwards MQTT messages to Firehose
     new iot.TopicRule(this, 'IotToFirehoseRule', {
-      sql: iot.IotSql.fromStringAsVer20160323("SELECT * FROM 'test/telemetry/#'"),
+      sql: iot.IotSql.fromStringAsVer20160323("SELECT * FROM 'sensors/telemetry/#'"),
       actions: [
         new iotActions.FirehosePutRecordAction(stream, {
           batchMode: false, // True causes issues with firehose sending to S3 (?)
@@ -68,5 +70,4 @@ export class IoTStreamLakeIngestStack extends Stack {
         }),
       ],
     });
-  }
-}
+}}
