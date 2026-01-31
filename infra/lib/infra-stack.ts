@@ -3,7 +3,7 @@ import {
   StackProps,
   RemovalPolicy,
   Duration,
-  Size,
+  CfnOutput,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -13,6 +13,7 @@ import * as iot from '@aws-cdk/aws-iot-alpha';
 import * as iotActions from '@aws-cdk/aws-iot-actions-alpha';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
 
 export class IoTStreamLakeIngestStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -181,5 +182,63 @@ def handler(event, _ctx):
         ),
       ],
     });
+
+    // =====================================================
+    // Cognito Identity Pool + IAM (for MQTT live streaming)
+    // =====================================================
+
+    const identityPool = new cognito.CfnIdentityPool(this, 'StreamLakeIdentityPool', {
+      allowUnauthenticatedIdentities: true,
+    });
+
+    // Unauthenticated role for web clients
+    const unauthRole = new iam.Role(this, 'StreamLakeUnauthRole', {
+      assumedBy: new iam.FederatedPrincipal(
+        'cognito-identity.amazonaws.com',
+        {
+          'StringEquals': { 'cognito-identity.amazonaws.com:aud': identityPool.ref},
+          'ForAnyValue:StringLike': { 'cognito-identity.amazonaws.com:amr': 'unauthenticated'},
+        },
+        'sts:AssumeRoleWithWebIdentity'
+      ),
+      description: 'Unauthenticated web clients for StreamLake dashboard'
+    });
+
+    // Restrict to MQTT topics + clientId pattern
+    const topicPrefix = 'sensors/telemetry';
+    const topicArn = `arn:aws:iot:${Stack.of(this).region}:${Stack.of(this).account}:topic/${topicPrefix}/*`;
+    const topicFilterArn = `arn:aws:iot:${Stack.of(this).region}:${Stack.of(this).account}:topicfilter/${topicPrefix}/*`;
+
+    unauthRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['iot:Connect'],
+      resources: ['*'],
+      conditions: {
+        StringLike: {
+          'iot:ClientId': ['streamlake-web-*'],
+        }
+      }
+    }));
+
+    unauthRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['iot:Subscribe'],
+      resources: [topicFilterArn],
+    }));
+
+    unauthRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['iot:Receive'],
+      resources: [topicArn],
+    }));
+
+    // Attach role to identity pool
+    new cognito.CfnIdentityPoolRoleAttachment(this, 'StreamLakeIdentityPoolRoleAttach', {
+      identityPoolId: identityPool.ref,
+      roles: {
+        unauthenticated: unauthRole.roleArn,
+      }
+    });
+
+    // Frontend outputs
+    new CfnOutput(this, 'IdentityPoolId', { value: identityPool.ref });
+    new CfnOutput(this, 'Region', { value: Stack.of(this).region});
   }
 }

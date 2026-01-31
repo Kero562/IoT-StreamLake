@@ -10,11 +10,31 @@ services:
 
       #### AWS IoT Core 
       - MQTT_BROKER=asyxev3w22pu2-ats.iot.us-west-1.amazonaws.com
-      - MQTT_TOPIC=sensors/telemetry
+      - MQTT_TOPIC_TEMPLATE=sensors/telemetry/{device_id}
+      - MQTT_PORT=8883
+      - MQTT_KEEPALIVE=60
       # DEVICE_ID can be added or left out to let the script generate a random one (refer to publisher.py)
+
+      # ==== Simulation mode ====
+      # One of two modes:
+      - MODE=INFINITE                   # or: POOL
+      # INFINITE mode knobs (ignored in POOL):
+      - ACTIVE_SET_SIZE=1000
+      - NEW_DEVICE_PROB=0.3
+      # POOL mode knob (ignored in INFINITE):
+      - DEVICE_COUNT=500
+      # Common:
+      - DEVICE_PREFIX=device
     volumes:
       - ./certs:/certs:ro
-    # Ignore this if not using Docker Swarm
+
+    command: 
+      - sh
+      - -ec
+      - |
+        SIM_INDEX=$(hostname | cksum | awk '{print $1}')
+        export SIM_INDEX
+        exec python /app/publisher.py
     deploy: 
       mode: replicated
       replicas: 10   # 🔁 bump to more depending on how much your machine can handle, or using Fargate

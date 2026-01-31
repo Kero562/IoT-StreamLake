@@ -2,8 +2,13 @@ import Header from "./components/Header";
 import KpiCard from "./components/Kpicard";
 import LiveSensorReadings from "./components/LiveSensorReadings";
 import DeviceLookup from "./components/DeviceLookup";
+import { useActiveDevices } from "./hooks/useActiveDevices";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import DebugIot from "./components/DebugIot";
 
 export default function App() {
+
+  const active = useActiveDevices(5 * 60 * 1000);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -13,8 +18,7 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KpiCard
             title="Active Devices"
-            value="241"
-            subtitle="+12 today"
+            value={String(active)}
             icon={<span role="img" aria-label="devices">📱</span>}
             variant="gradient"
           />
@@ -53,7 +57,7 @@ export default function App() {
         </div>
         
       </div>
-
+      {/* <DebugIot /> */}
     </div>
   
   )
