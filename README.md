@@ -2,6 +2,9 @@
 
 IoT-StreamLake is a live IoT observability demo that shows a full telemetry path from simulated devices to cloud ingest to a browser dashboard.
 
+<img width="1919" height="943" alt="image" src="https://github.com/user-attachments/assets/b231b749-35f3-4762-b4ee-80589b84cffa" />
+
+
 It is built to answer one simple question in a compelling way:
 
 `What does a modern IoT streaming pipeline look like when devices are publishing right now and operators need to see the fleet respond live?`
@@ -204,57 +207,3 @@ docker compose up --build
 ```
 
 The compose setup is configured to target AWS IoT Core and can replicate the simulator for higher message volume.
-
-## Demo Flow Suggestions
-
-If you are presenting this project, this is the strongest sequence:
-
-1. Start the simulator and let the dashboard populate.
-2. Show active devices climbing and throughput changing live.
-3. Open device lookup and search for an observed sensor.
-4. Open the alerts panel and explain the categories.
-5. Enable `?sim=1` and trigger delay, drops, or disconnect.
-6. Show the system health score degrade and alerts react in real time.
-7. Revert the simulation settings and show the dashboard recover.
-
-## Why This Demo Works
-
-This project is effective as a demo because it is not just static UI. It has:
-
-- real message flow
-- realistic cloud integration
-- visible operational feedback
-- controllable failure injection
-- enough scale pressure to make the dashboard interesting
-
-It gives a viewer a clear picture of how live IoT telemetry can be ingested, monitored, and explored in near real time.
-
-## Demo Boundaries
-
-This repository is best understood as a technical showcase, not a finished product. It currently focuses on:
-
-- live monitoring
-- ingest path demonstration
-- streaming behavior
-- dashboard interaction
-- failure simulation
-
-It does not yet attempt to be a complete commercial platform with:
-
-- multi-tenant customer management
-- device provisioning workflows
-- historical analytics UI
-- user roles and access control
-- ticketing or incident workflow integrations
-- long-term reporting
-
-## Close-Out Summary
-
-IoT-StreamLake is a strong end-of-project demo for showing:
-
-- how simulated devices publish telemetry
-- how AWS IoT Core and Firehose can ingest that data
-- how a React dashboard can subscribe to it live
-- how fleet status, alerts, and simulated failures can be presented in a credible operator experience
-
-If the goal is to close out the project as a polished demo, this repository is in a good shape for that purpose.
