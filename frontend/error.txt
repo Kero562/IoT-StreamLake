@@ -1,0 +1,12 @@
+src/hooks/__tests__/useAlerts.test.ts(7,7): error TS2739: Type '{ messages: TelemetryMsg[]; connected: true; lastMessageAt: number; simulation: { disconnected: false; dropPercent: number; delayMs: number; setDisconnected: Mock<Procedure>; setDropPercent: Mock<...>; setDelayMs: Mock<...>; }; }' is missing the following properties from type 'MqttContextValue': chaos, knownDeviceIds
+src/hooks/__tests__/useAlerts.test.ts(53,42): error TS2339: Property 'find' does not exist on type '{ alerts: Alert[]; acknowledge: (id: string) => void; dismiss: (id: string) => void; clearHistory: () => void; }'.
+src/hooks/__tests__/useAlerts.test.ts(53,48): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/hooks/__tests__/useAlerts.test.ts(68,31): error TS2339: Property 'find' does not exist on type '{ alerts: Alert[]; acknowledge: (id: string) => void; dismiss: (id: string) => void; clearHistory: () => void; }'.
+src/hooks/__tests__/useAlerts.test.ts(68,37): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/hooks/__tests__/useAlerts.test.ts(79,42): error TS2339: Property 'find' does not exist on type '{ alerts: Alert[]; acknowledge: (id: string) => void; dismiss: (id: string) => void; clearHistory: () => void; }'.
+src/hooks/__tests__/useAlerts.test.ts(79,48): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/hooks/__tests__/useAlerts.test.ts(97,42): error TS2339: Property 'find' does not exist on type '{ alerts: Alert[]; acknowledge: (id: string) => void; dismiss: (id: string) => void; clearHistory: () => void; }'.
+src/hooks/__tests__/useAlerts.test.ts(98,14): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/hooks/__tests__/useDeviceIndex.test.ts(7,7): error TS2739: Type '{ messages: TelemetryMsg[]; connected: true; lastMessageAt: number; simulation: { disconnected: false; dropPercent: number; delayMs: number; setDisconnected: Mock<Procedure>; setDropPercent: Mock<...>; setDelayMs: Mock<...>; }; }' is missing the following properties from type 'MqttContextValue': chaos, knownDeviceIds
+src/hooks/__tests__/useSystemHealth.test.ts(7,7): error TS2739: Type '{ messages: never[]; connected: true; lastMessageAt: number; simulation: { disconnected: false; dropPercent: number; delayMs: number; setDisconnected: Mock<Procedure>; setDropPercent: Mock<...>; setDelayMs: Mock<...>; }; }' is missing the following properties from type 'MqttContextValue': chaos, knownDeviceIds
+src/hooks/useAlerts.ts(73,7): error TS6133: 'DEVICE_OFFLINE_MS' is declared but its value is never read.

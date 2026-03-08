@@ -1,0 +1,38 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mE:/IoT-StreamLake/frontend[39m
+
+ [32m✓[39m src/hooks/__tests__/useDeviceIndex.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/LiveSensorReadings.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useAlerts.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [31m❯[39m src/hooks/__tests__/useSystemHealth.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 50[2mms[22m[39m
+     [32m✓[39m returns 100% when messages are recent[32m 26[2mms[22m[39m
+     [32m✓[39m degrades when lastMessageAge > degradeAfterMs[32m 5[2mms[22m[39m
+[31m     [31m×[31m returns 0% when disconnected and no messages[39m[32m 16[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/hooks/__tests__/useSystemHealth.test.ts[2m > [22museSystemHealth[2m > [22mreturns 0% when disconnected and no messages
+[31m[1mAssertionError[22m: expected 40 to be +0 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 40[39m
+
+[36m [2m❯[22m src/hooks/__tests__/useSystemHealth.test.ts:[2m106:46[22m[39m
+    [90m104| [39m        })[33m;[39m
+    [90m105| [39m
+    [90m106| [39m        [34mexpect[39m(result[33m.[39mcurrent[33m.[39mhealthPercent)[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                                             [31m^[39m
+    [90m107| [39m        [34mexpect[39m(result[33m.[39mcurrent[33m.[39mstatusText)[33m.[39m[34mtoBe[39m([32m"Disconnected"[39m)[33m;[39m
+    [90m108| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m12 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 17:51:15
+[2m   Duration [22m 2.55s[2m (transform 755ms, setup 1.05s, import 2.25s, tests 213ms, environment 5.58s)[22m
+
